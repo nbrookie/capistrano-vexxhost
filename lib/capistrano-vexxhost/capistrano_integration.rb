@@ -111,11 +111,13 @@ Capistrano::Configuration.instance(:must_exist).load do
     request_location = "/json-api/cpanel?#{request_query}"
 
     # Run the request
-    Net::HTTP.start(hostname, 2083, :use_ssl => true, :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+    Net::HTTP.start(hostname, 2083) do |http|
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = Net::HTTP::Get.new(request_location, {'Authorization' => "Basic #{authorization}"})
       response = http.request(request)
 
-      return (response.body.empty?) ? nil : JSON.parse(response.body)
+      return (response.body.empty?) ? nil : JSON.parse(response.body.match(/\{(.*)\}/)[0])
     end
   end
 
