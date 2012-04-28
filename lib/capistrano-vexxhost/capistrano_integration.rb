@@ -111,7 +111,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     request_location = "/json-api/cpanel?#{request_query}"
 
     # Run the request
-    if RUBY_VERSION >= '1.8.7'
+    if RUBY_VERSION > '1.8.7'
       Net::HTTP.start(hostname, 2083, :use_ssl => true, :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
         request = Net::HTTP::Get.new(request_location, {'Authorization' => "Basic #{authorization}"})
         response = http.request(request)
